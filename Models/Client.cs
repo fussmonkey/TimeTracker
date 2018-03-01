@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using LiteDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace TimeTracker.Models
     private DateTime? _datePaid;
     private int _paidAmount;
     private bool _isSelected;
+    private BindableCollection<FileInfo> _files;
     #endregion
 
     public Client()
@@ -30,6 +32,7 @@ namespace TimeTracker.Models
       Id = Guid.NewGuid();
       DateReceived = DateTime.Now;
       Notes = new BindableCollection<Note>();
+      Files = new BindableCollection<FileInfo>();
     }
 
     #region " Properties "
@@ -98,13 +101,31 @@ namespace TimeTracker.Models
     public DateTime? WorkStarted
     {
       get { return _workStarted; }
-      set { if (_workStarted != value) { _workStarted = value; NotifyOfPropertyChange(() => WorkStarted); } }
+      set
+      {
+        if (_workStarted != value)
+        {
+          _workStarted = value;
+          NotifyOfPropertyChange(() => WorkStarted);
+          NotifyOfPropertyChange(() => CanStart);
+          NotifyOfPropertyChange(() => CanStop);
+        }
+      }
     }
 
     public DateTime? WorkStopped
     {
       get { return _workStopped; }
-      set { if (_workStopped != value) { _workStopped = value; NotifyOfPropertyChange(() => WorkStopped); } }
+      set
+      {
+        if (_workStopped != value)
+        {
+          _workStopped = value;
+          NotifyOfPropertyChange(() => WorkStopped);
+          NotifyOfPropertyChange(() => CanStart);
+          NotifyOfPropertyChange(() => CanStop);
+        }
+      }
     }
 
     public double TotalTime
@@ -117,6 +138,12 @@ namespace TimeTracker.Models
     {
       get { return _notes; }
       set { if (_notes != value) { _notes = value; NotifyOfPropertyChange(() => Notes); } }
+    }
+
+    public BindableCollection<FileInfo> Files
+    {
+      get { return _files; }
+      set { if (_files != value) { _files = value; NotifyOfPropertyChange(() => Files); } }
     }
 
     public bool LocalClient
@@ -137,6 +164,18 @@ namespace TimeTracker.Models
       set { if (_paidAmount != value) { _paidAmount = value; NotifyOfPropertyChange(() => PaidAmount); } }
     }
 
+    [BsonIgnore]
+    public bool CanStart
+    {
+      get { return !_workStarted.HasValue || _workStopped.HasValue; }
+    }
+
+    [BsonIgnore]
+    public bool CanStop
+    {
+      get { return _workStarted.HasValue && !_workStopped.HasValue; }
+    }
+
     [LiteDB.BsonIgnore()]
     public string FormattedNotes
     {
@@ -152,9 +191,16 @@ namespace TimeTracker.Models
         }
         else
         {
-          foreach (Note n in Notes)
+          foreach (Note note in Notes.Where(n => !n.IsPrivate))
           {
-            sb.AppendLine($"<li><i>Page {n.Page}</i>: {n.Body}</li>");
+            if (string.IsNullOrWhiteSpace(note.Page))
+            {
+              sb.AppendLine($"<li>{note.Body}</li>");
+            }
+            else
+            {
+              sb.AppendLine($"<li><i>Page {note.Page}</i>: {note.Body}</li>");
+            }
           }
         }
         sb.AppendLine("</ul>");

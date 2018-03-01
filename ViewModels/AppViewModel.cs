@@ -25,6 +25,7 @@ namespace TimeTracker.ViewModels
     private Client _selectedClient;
     ////////private Note _newNote;
     private Note _selectedNote;
+    private FileInfo _selectedFile;
 
     #endregion
 
@@ -62,6 +63,12 @@ namespace TimeTracker.ViewModels
     {
       get { return _selectedNote; }
       set { if (_selectedNote != value) { _selectedNote = value; NotifyOfPropertyChange(() => SelectedNote); } }
+    }
+
+    public FileInfo SelectedFile
+    {
+      get { return _selectedFile; }
+      set { if (_selectedFile != value) { _selectedFile = value; NotifyOfPropertyChange(() => SelectedFile); } }
     }
 
 
@@ -135,6 +142,22 @@ namespace TimeTracker.ViewModels
       Note newNote = new Note(); // { Page = SelectedNote.Page, Body = SelectedNote.Body, IsPrivate = SelectedNote.IsPrivate };
       SelectedClient.Notes.Add(newNote);
       SelectedNote = newNote;
+    }
+
+    public void DeleteNote()
+    {
+      if (SelectedClient != null && SelectedNote != null)
+      {
+        if (MessageBox.Show("Are you sure you want to delete this note?", "Confirm Delete Note", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+        {
+          SelectedClient.Notes.Remove(SelectedNote);
+        }
+      }
+    }
+
+    public void DeleteFile()
+    {
+
     }
 
     public void GetNotes()

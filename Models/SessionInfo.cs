@@ -17,9 +17,7 @@ namespace TimeTracker.Models
 
     #region " Private Variables "
 
-    private string _userDisplayName;
-    private IDataAccess _dataAccess;
-
+    
     #endregion
 
 
@@ -29,10 +27,6 @@ namespace TimeTracker.Models
     {
       WindowManager = windowManager;
       EventAggregator = eventAggregator;
-      UserGuid = Guid.Parse(core.Windows.Environment.GetGuidFromUserName(core.Windows.Environment.GetWindowsUserName()));
-      UserDisplayName = core.Windows.Environment.GetDisplayNameFromUserName(core.Windows.Environment.GetWindowsUserName());
-      Server = server;
-      Database = database;
     }
 
     #endregion
@@ -42,21 +36,9 @@ namespace TimeTracker.Models
 
     public IWindowManager WindowManager { get; private set; }
     public IEventAggregator EventAggregator { get; private set; }
-    internal string Server { get; set; }
-    internal string Database { get; set; }
-
+    
     public static Guid ToolGuid { get { return new Guid("00000000-0000-0000-0000-000000000000"); } }
-
-    [DAWrite("@userGuid")]
-    public Guid UserGuid { get; private set; }
-
-    [DAWrite("@insertedBy")]
-    [DAWrite("@updatedBy")]
-    public string UserDisplayName
-    {
-      get { return _userDisplayName; }
-      set { if (_userDisplayName == null || _userDisplayName.Length == 0) { _userDisplayName = value; } }
-    }
+       
 
     public string SettingsPath
     {

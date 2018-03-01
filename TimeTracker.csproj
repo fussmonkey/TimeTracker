@@ -94,15 +94,19 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Behaviors\EventFocusAttachment.cs" />
     <Compile Include="Business\ClipboardHelper.cs" />
     <Compile Include="Business\DB.cs" />
     <Compile Include="General.cs" />
     <Compile Include="Interfaces\IDataAccess.cs" />
     <Compile Include="Models\Client.cs" />
+    <Compile Include="Models\FileInfo.cs" />
     <Compile Include="Models\Note.cs" />
     <Compile Include="Models\SessionInfo.cs" />
-    <Compile Include="Models\SQLDataAccess.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
+    <Compile Include="Views\AppView.xaml.cs">
+      <DependentUpon>AppView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppBootstrapper.cs" />

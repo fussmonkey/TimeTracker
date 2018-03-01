@@ -6,10 +6,11 @@
                  xmlns:cal="http://www.caliburnproject.org"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                  xmlns:vms="clr-namespace:TimeTracker.ViewModels"
+                 xmlns:beh="clr-namespace:TimeTracker.Behaviors"
                  xmlns:coreConverters="clr-namespace:ASI.Q.Core.WPF.Converters;assembly=ASI.Q.Core.WPF"
                  mc:Ignorable="d"
                  SaveWindowPosition="True"
-                 d:DesignHeight="500"
+                 d:DesignHeight="900"
                  d:DesignWidth="900"
                  d:DataContext="{d:DesignInstance Type=vms:AppViewModel, IsDesignTimeCreatable=False}">
   <mah:MetroWindow.Resources>
@@ -19,24 +20,18 @@
   </mah:MetroWindow.Resources>
   <Grid Margin="5">
     <Grid.RowDefinitions>
-      <!-- TODO: Remove if not needed -->
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="*" />
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="2*" />
       <!--<ColumnDefinition Width="*" />-->
       <ColumnDefinition Width="*" />
     </Grid.ColumnDefinitions>
 
-    <!-- List -->
-    <Grid Grid.Column="0">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="*" />
-      </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
-        <!-- TODO: Remove if not needed -->
-      </Grid.ColumnDefinitions>
-
+    <!-- Menu -->
+    <Grid Grid.Row="0"
+          Grid.ColumnSpan="2">
       <StackPanel Grid.Row="0"
                   Height="40"
                   Orientation="Horizontal">
@@ -50,6 +45,7 @@
           </Style>
         </StackPanel.Resources>
         <Button Content="New..."
+                beh:EventFocusAttachment.ElementToFocus="{Binding ElementName=LastName}"
                 cal:Message.Attach="[Event Click]=[Action AddClient()]" />
         <Button Content="Get Notes"
                 cal:Message.Attach="[Event Click]=[Action GetNotes()]" />
@@ -58,6 +54,20 @@
         <Button Content="Save All"
                 cal:Message.Attach="[Event Click]=[Action SaveAll()]" />
       </StackPanel>
+    </Grid>
+
+    <!-- List -->
+    <Grid Grid.Row="1"
+          Grid.Column="0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="*" />
+      </Grid.RowDefinitions>
+      <Grid.ColumnDefinitions>
+        <!-- TODO: Remove if not needed -->
+      </Grid.ColumnDefinitions>
+
+
 
       <DataGrid Grid.Row="1"
                 AutoGenerateColumns="False"
@@ -120,6 +130,26 @@
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
+          <DataGridTemplateColumn Header="Work Start"
+                                  SortMemberPath="WorkStarted">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <TextBlock Margin="2"
+                           Text="{Binding Path=WorkStarted, StringFormat={}{0:t}}"
+                           TextTrimming="CharacterEllipsis" />
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
+          <DataGridTemplateColumn Header="Work Stop"
+                                  SortMemberPath="WorkStopped">
+            <DataGridTemplateColumn.CellTemplate>
+              <DataTemplate>
+                <TextBlock Margin="2"
+                           Text="{Binding Path=WorkStopped, StringFormat={}{0:t}}"
+                           TextTrimming="CharacterEllipsis" />
+              </DataTemplate>
+            </DataGridTemplateColumn.CellTemplate>
+          </DataGridTemplateColumn>
           <DataGridTemplateColumn Header="Date Returned"
                                   SortMemberPath="DateReturned">
             <DataGridTemplateColumn.CellTemplate>
@@ -135,72 +165,8 @@
     </Grid>
 
     <!-- Details -->
-    <!--<Grid Grid.Column="1"
-          IsEnabled="{Binding Path=SelectedClient, Converter={StaticResource ToBooleanConverter} }"
-          Visibility="Collapsed">
-      <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" />
-      </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="Auto" />
-        <ColumnDefinition Width="*" />
-      </Grid.ColumnDefinitions>
-
-      -->
-    <!-- Date Started/Returned -->
-    <!--
-
-      <StackPanel Grid.Row="2"
-                  Grid.Column="1"
-                  Orientation="Horizontal">
-
-
-      </StackPanel>
-
-      -->
-    <!-- Time spent actually working -->
-    <!--
-      
-      <Grid Grid.Row="3"
-            Grid.Column="1">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto" />
-
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="75" />
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="75" />
-          <ColumnDefinition Width="Auto" />
-          <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-
-        
-        
-        
-      </Grid>
-
-      -->
-    <!-- Notes -->
-    <!--
-      
-      
-
-
-
-     
-
-    </Grid>-->
-
-    <Grid Grid.Column="2"
+    <Grid Grid.Row="1"
+          Grid.Column="2"
           IsEnabled="{Binding Path=SelectedClient, Converter={StaticResource ToBooleanConverter} }">
       <StackPanel>
         <StackPanel.Resources>
@@ -208,9 +174,12 @@
             <Setter Property="Width"
                     Value="125" />
           </Style>
-          <Style TargetType="TextBox">
+          <Style TargetType="TextBox"
+                 BasedOn="{StaticResource MetroTextBox}">
             <Setter Property="FontSize"
                     Value="14" />
+            <Setter Property="Margin"
+                    Value="3" />
           </Style>
           <Style TargetType="TextBlock">
             <Setter Property="Margin"
@@ -223,13 +192,16 @@
                     Value="Bold" />
           </Style>
 
-          <Style TargetType="DatePicker">
+          <Style TargetType="DatePicker"
+                 BasedOn="{StaticResource MetroDatePicker}">
             <Setter Property="Width"
                     Value="150" />
             <Setter Property="HorizontalAlignment"
                     Value="Left" />
             <Setter Property="FontSize"
                     Value="14" />
+            <Setter Property="Margin"
+                    Value="3" />
           </Style>
         </StackPanel.Resources>
         <Grid>
@@ -239,7 +211,10 @@
           </Grid.ColumnDefinitions>
         </Grid>
 
-        <Grid>
+        <Grid AllowDrop="True"
+              Drop="Grid_Drop"
+              DragEnter="Grid_DragEnter"
+              Background="Transparent">
           <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="*" />
@@ -247,7 +222,11 @@
           <TextBlock Grid.Column="0"
                      Text="Last Name" />
           <TextBox Grid.Column="1"
-                   Text="{Binding SelectedClient.LastName}" />
+                   x:Name="LastName"
+                   AllowDrop="True"
+                   Text="{Binding SelectedClient.LastName}"
+                   DragEnter="TextBox_DragEnter"
+                   Drop="TextBox_Drop" />
         </Grid>
 
         <Grid>
@@ -299,37 +278,39 @@
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="75" />
+            <!--<ColumnDefinition Width="75" />-->
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
-          <TextBlock Grid.Row="3"
+          <!--<TextBlock Grid.Row="3"
                      Grid.Column="0"
                      Margin="3,4,3,3"
-                     VerticalAlignment="Top"
-                     Text="Start Time" />
+                     Text="Start Time" />-->
           <Button Grid.Row="0"
-                  Grid.Column="1"
+                  Grid.Column="0"
                   Content="Started"
+                  Margin="3"
+                  IsEnabled="{Binding Path=SelectedClient.CanStart}"
                   cal:Message.Attach="[Event Click]=[Action StartWork()]" />
           <TextBlock Grid.Row="0"
-                     Grid.Column="2"
+                     Grid.Column="1"
                      Text="{Binding Path=SelectedClient.WorkStarted, StringFormat={}{0:t}}" />
         </Grid>
 
         <Grid>
           <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition Width="75" />
+            <!--<ColumnDefinition Width="75" />-->
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
-          <TextBlock Grid.Column="0"
+          <!--<TextBlock Grid.Column="0"
                      Margin="3,4,3,3"
-                     VerticalAlignment="Top"
-                     Text="Stop Time" />
-          <Button Grid.Column="1"
+                     Text="Stop Time" />-->
+          <Button Grid.Column="0"
                   Content="Stopped"
+                  Margin="3"
+                  IsEnabled="{Binding Path=SelectedClient.CanStop}"
                   cal:Message.Attach="[Event Click]=[Action StopWork()]" />
-          <TextBlock Grid.Column="2"
+          <TextBlock Grid.Column="1"
                      Text="{Binding Path=SelectedClient.WorkStopped, StringFormat={}{0:t}}" />
         </Grid>
 
@@ -350,20 +331,58 @@
 
         <Grid>
           <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
 
-          <DataGrid Grid.Column="0"
+          <StackPanel Grid.Column="0"
+                      Orientation="Vertical"
+                      Margin="3">
+            <StackPanel.Resources>
+              <Style TargetType="Button"
+                     BasedOn="{StaticResource MetroButton}">
+                <Setter Property="Margin"
+                        Value="0,3" />
+                <Setter Property="FontSize"
+                        Value="18" />
+                <Setter Property="FontWeight"
+                        Value="Bold" />
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Center" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="Width"
+                        Value="20" />
+                <Setter Property="MinWidth"
+                        Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
+                <Setter Property="MinHeight"
+                        Value="{Binding ActualWidth, RelativeSource={RelativeSource Self}}" />
+              </Style>
+            </StackPanel.Resources>
+            <Button Content="+"
+                    ToolTip="Add note"
+                    beh:EventFocusAttachment.ElementToFocus="{Binding ElementName=NotePage}"
+                    cal:Message.Attach="[Event Click]=[Action AddNote()]" />
+            <Button Content="-"
+                    ToolTip="Delete note"
+                    cal:Message.Attach="[Event Click]=[Action DeleteNote()]" />
+          </StackPanel>
+          <DataGrid Grid.Column="1"
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
                     CanUserReorderColumns="False"
                     CanUserResizeRows="False"
                     CanUserSortColumns="True"
                     Margin="3"
+                    Height="100"
+                    VerticalScrollBarVisibility="Auto"
                     ItemsSource="{Binding Path=SelectedClient.Notes}"
                     SelectedItem="{Binding Path=SelectedNote, Mode=TwoWay}"
                     SelectionMode="Single"
-                    SelectionUnit="FullRow">
+                    SelectionUnit="FullRow"
+                    AllowDrop="True"
+                    DragEnter="DataGrid_DragEnter"
+                    Drop="DataGrid_Drop">
             <!--SelectedItem="{Binding Path=SelectedProfile, Mode=TwoWay}"-->
             <DataGrid.Columns>
 
@@ -420,6 +439,7 @@
                      Text="Page" />
           <TextBox Grid.Column="1"
                    Grid.Row="0"
+                   x:Name="NotePage"
                    Text="{Binding Path=SelectedNote.Page, Mode=TwoWay}" />
           <CheckBox Grid.Column="2"
                     Margin="5,0,0,0"
@@ -439,7 +459,7 @@
             <ColumnDefinition Width="*" />
           </Grid.ColumnDefinitions>
           <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
+            <RowDefinition Height="100" />
           </Grid.RowDefinitions>
 
           <TextBlock Grid.Column="0"
@@ -450,6 +470,86 @@
                    TextWrapping="WrapWithOverflow"
                    Text="{Binding Path=SelectedNote.Body, Mode=TwoWay}" />
         </Grid>
+
+        <TextBlock Text="Files" />
+        <Grid>
+          <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+          </Grid.ColumnDefinitions>
+
+          <StackPanel Grid.Column="0"
+                      Orientation="Vertical"
+                      Margin="3">
+            <StackPanel.Resources>
+              <Style TargetType="Button"
+                     BasedOn="{StaticResource MetroButton}">
+                <Setter Property="Margin"
+                        Value="0,3" />
+                <Setter Property="FontSize"
+                        Value="18" />
+                <Setter Property="FontWeight"
+                        Value="Bold" />
+                <Setter Property="HorizontalContentAlignment"
+                        Value="Center" />
+                <Setter Property="VerticalContentAlignment"
+                        Value="Center" />
+                <Setter Property="Width"
+                        Value="20" />
+                <Setter Property="MinWidth"
+                        Value="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" />
+                <Setter Property="MinHeight"
+                        Value="{Binding ActualWidth, RelativeSource={RelativeSource Self}}" />
+              </Style>
+            </StackPanel.Resources>
+            <Button Content="-"
+                    ToolTip="Delete file"
+                    cal:Message.Attach="[Event Click]=[Action DeleteFile()]" />
+          </StackPanel>
+          <DataGrid Grid.Column="1"
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    CanUserReorderColumns="False"
+                    CanUserResizeRows="False"
+                    CanUserSortColumns="True"
+                    Margin="3"
+                    Height="100"
+                    VerticalScrollBarVisibility="Auto"
+                    ItemsSource="{Binding Path=SelectedClient.Files}"
+                    SelectedItem="{Binding Path=SelectedFile, Mode=TwoWay}"
+                    SelectionMode="Single"
+                    SelectionUnit="FullRow"
+                    AllowDrop="True"
+                    DragEnter="DataGrid_DragEnter"
+                    Drop="DataGrid_Drop">
+            <!--SelectedItem="{Binding Path=SelectedProfile, Mode=TwoWay}"-->
+            <DataGrid.Columns>
+
+              <DataGridTemplateColumn Header="Size"
+                                      SortMemberPath="Length">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate>
+                    <TextBlock Margin="2"
+                               Text="{Binding Path=LengthFormatted}"
+                               TextTrimming="CharacterEllipsis" />
+                  </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+              <DataGridTemplateColumn Header="File"
+                                      SortMemberPath="FileName"
+                                      Width="*">
+                <DataGridTemplateColumn.CellTemplate>
+                  <DataTemplate>
+                    <TextBlock Margin="2"
+                               Text="{Binding Path=FileName}"
+                               TextTrimming="CharacterEllipsis" />
+                  </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+              </DataGridTemplateColumn>
+            </DataGrid.Columns>
+          </DataGrid>
+        </Grid>
+
         <!-- Buttons -->
         <StackPanel Grid.Row="7"
                     Grid.ColumnSpan="2"
