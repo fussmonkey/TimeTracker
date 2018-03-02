@@ -26,6 +26,7 @@ namespace TimeTracker.ViewModels
     ////////private Note _newNote;
     private Note _selectedNote;
     private FileInfo _selectedFile;
+    private bool _isClientHeaderSelected;
 
     #endregion
 
@@ -71,6 +72,11 @@ namespace TimeTracker.ViewModels
       set { if (_selectedFile != value) { _selectedFile = value; NotifyOfPropertyChange(() => SelectedFile); } }
     }
 
+    public bool IsClientHeaderSelected
+    {
+      get { return _isClientHeaderSelected; }
+      set { if (_isClientHeaderSelected != value) { _isClientHeaderSelected = value; NotifyOfPropertyChange(() => IsClientHeaderSelected); } }
+    }
 
     ////////public Note NewNote
     ////////{
@@ -107,6 +113,7 @@ namespace TimeTracker.ViewModels
     public void SaveClient()
     {
       Business.DB.SaveClient(Session, SelectedClient);
+      SelectedNote = null;
     }
 
     public void Cancel()
@@ -181,6 +188,14 @@ namespace TimeTracker.ViewModels
       foreach (Client client in Session.Clients.Where(c => c.IsSelected))
       {
         client.DateReturned = DateTime.Now;
+      }
+    }
+
+    public void ClientChecked()
+    {
+      foreach (Client c in Session.Clients)
+      {
+        c.IsSelected = IsClientHeaderSelected;
       }
     }
     #endregion

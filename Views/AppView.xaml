@@ -30,8 +30,8 @@
     </Grid.ColumnDefinitions>
 
     <!-- Menu -->
-    <Grid Grid.Row="0"
-          Grid.ColumnSpan="2">
+    <!--<Grid Grid.Row="0"
+          Grid.ColumnSpan="2">-->
       <StackPanel Grid.Row="0"
                   Height="40"
                   Orientation="Horizontal">
@@ -54,7 +54,26 @@
         <Button Content="Save All"
                 cal:Message.Attach="[Event Click]=[Action SaveAll()]" />
       </StackPanel>
-    </Grid>
+    <!--</Grid>-->
+
+    <StackPanel Grid.Row="0"
+                Grid.Column="1"
+                Height="40"
+                Orientation="Horizontal">
+      <StackPanel.Resources>
+        <Style BasedOn="{StaticResource {x:Type Button}}"
+               TargetType="Button">
+          <Setter Property="Margin"
+                  Value="0,0,3,0" />
+          <Setter Property="Width"
+                  Value="75" />
+        </Style>
+      </StackPanel.Resources>
+      <!-- Save -->
+      <Button Content="Save"
+              Width="100"
+              cal:Message.Attach="[Event Click]=[Action SaveClient]" />
+    </StackPanel>
 
     <!-- List -->
     <Grid Grid.Row="1"
@@ -83,9 +102,17 @@
         <!--SelectedItem="{Binding Path=SelectedProfile, Mode=TwoWay}"-->
         <DataGrid.Columns>
           <DataGridTemplateColumn Header="">
+            <DataGridTemplateColumn.HeaderTemplate>
+              <DataTemplate>
+                <CheckBox IsChecked="{Binding Path=DataContext.IsClientHeaderSelected, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+                          Margin="-7,0"
+                          cal:Message.Attach="[Event Checked] = [Action ClientChecked()];[Event Unchecked] = [Action ClientChecked()]" />
+              </DataTemplate>
+            </DataGridTemplateColumn.HeaderTemplate>
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
-                <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Margin="5,0,0,0"/>
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
@@ -445,11 +472,11 @@
                     Margin="5,0,0,0"
                     Content="Private"
                     IsChecked="{Binding Path=SelectedNote.IsPrivate}" />
-          <Button Grid.Column="4"
+          <!--<Button Grid.Column="4"
                   Grid.Row="0"
                   Content="Add"
                   Margin="5,0,0,0"
-                  cal:Message.Attach="[Event Click]=[Action AddNote()]" />
+                  cal:Message.Attach="[Event Click]=[Action AddNote()]" />-->
 
         </Grid>
 
@@ -550,18 +577,7 @@
           </DataGrid>
         </Grid>
 
-        <!-- Buttons -->
-        <StackPanel Grid.Row="7"
-                    Grid.ColumnSpan="2"
-                    Height="50"
-                    Orientation="Horizontal"
-                    HorizontalAlignment="Right">
-
-          <!-- Save -->
-          <Button Content="Save"
-                  Width="100"
-                  cal:Message.Attach="[Event Click]=[Action SaveClient]" />
-        </StackPanel>
+        
 
 
 
