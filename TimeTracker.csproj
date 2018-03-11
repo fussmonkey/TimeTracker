@@ -95,6 +95,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Behaviors\EventFocusAttachment.cs" />
+    <Compile Include="Behaviors\InputBindingTrigger.cs" />
     <Compile Include="Business\ClipboardHelper.cs" />
     <Compile Include="Business\DB.cs" />
     <Compile Include="General.cs" />

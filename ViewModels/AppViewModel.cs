@@ -129,7 +129,7 @@ namespace TimeTracker.ViewModels
 
     public void StartWork()
     {
-      SelectedClient.WorkStarted = DateTime.Now.AddHours(-0.64);
+      SelectedClient.WorkStarted = DateTime.Now;
       if (!SelectedClient.DateStarted.HasValue)
       {
         SelectedClient.DateStarted = DateTime.Now;

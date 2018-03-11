@@ -9,11 +9,16 @@ using System.Windows;
 using System.Windows.Controls;
 using TimeTracker.Models;
 using TimeTracker.ViewModels;
+using System.Runtime.InteropServices;
+using System.Windows.Input;
 
 namespace TimeTracker.Views
 {
   public partial class AppView : MetroWindow
   {
+    [DllImport("user32.dll")]
+    static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
     public AppView()
     {
       InitializeComponent();
@@ -84,6 +89,18 @@ namespace TimeTracker.Views
             MessageBox.Show(file);
           }
         }
+      }
+    }
+
+    private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+      if (Keyboard.GetKeyStates(Key.CapsLock) == KeyStates.Toggled) // Checks Capslock is on
+      {
+        const int KEYEVENTF_EXTENDEDKEY = 0x1;
+        const int KEYEVENTF_KEYUP = 0x2;
+        keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY, (UIntPtr)0);
+        keybd_event(0x14, 0x45, KEYEVENTF_EXTENDEDKEY | KEYEVENTF_KEYUP,
+        (UIntPtr)0);
       }
     }
 
