@@ -78,6 +78,11 @@ namespace TimeTracker.ViewModels
       set { if (_isClientHeaderSelected != value) { _isClientHeaderSelected = value; NotifyOfPropertyChange(() => IsClientHeaderSelected); } }
     }
 
+    public int ReturnedClientCount
+    {
+      get { return Session.Clients.Count(c => c.DateReturned.HasValue); }
+    }
+
     ////////public Note NewNote
     ////////{
     ////////  get { return _newNote; }
@@ -189,6 +194,7 @@ namespace TimeTracker.ViewModels
       {
         client.DateReturned = DateTime.Now;
       }
+      NotifyOfPropertyChange(() => ReturnedClientCount);
     }
 
     public void ClientChecked()

@@ -13,6 +13,8 @@
                  xmlns:plat="clr-namespace:Caliburn.Micro;assembly=Caliburn.Micro.Platform"
                  mc:Ignorable="d"
                  SaveWindowPosition="True"
+                 BorderBrush="{StaticResource AccentColorBrush}"
+                 BorderThickness="2"
                  d:DesignHeight="900"
                  d:DesignWidth="900"
                  d:DataContext="{d:DesignInstance Type=vms:AppViewModel, IsDesignTimeCreatable=False}">
@@ -82,39 +84,42 @@
       </StackPanel>
     <!--</Grid>-->
 
-    <StackPanel Grid.Row="0"
-                Grid.Column="1"
-                Height="40"
-                Orientation="Horizontal">
-      <StackPanel.Resources>
-        <Style BasedOn="{StaticResource {x:Type Button}}"
-               TargetType="Button">
-          <Setter Property="Margin"
-                  Value="0,0,3,0" />
-          <Setter Property="Width"
-                  Value="75" />
-        </Style>
-      </StackPanel.Resources>
-      <!-- Save -->
-      <Button Content="Save"
-              Width="100"
-              cal:Message.Attach="[Event Click]=[Action SaveClient]" />
-    </StackPanel>
+    <DockPanel Grid.Row="0"
+               Grid.Column="1">
+      <StackPanel Height="40"
+                  HorizontalAlignment="Right"
+                  Orientation="Horizontal">
+        <StackPanel.Resources>
+          <Style BasedOn="{StaticResource {x:Type Button}}"
+                 TargetType="Button">
+            <Setter Property="Margin"
+                    Value="0,0,3,0" />
+            <Setter Property="Width"
+                    Value="75" />
+          </Style>
+        </StackPanel.Resources>
+        <Button Content="New..."
+                beh:EventFocusAttachment.ElementToFocus="{Binding ElementName=LastName}"
+                cal:Message.Attach="[Event Click]=[Action AddClient()]" />
+        <!-- Save -->
+        <Button Content="Save"
+                
+                cal:Message.Attach="[Event Click]=[Action SaveClient]" />
+      </StackPanel>
+    </DockPanel>
 
     <!-- List -->
     <Grid Grid.Row="1"
           Grid.Column="0">
       <Grid.RowDefinitions>
-        <RowDefinition Height="Auto" />
         <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
       </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
         <!-- TODO: Remove if not needed -->
       </Grid.ColumnDefinitions>
 
-
-
-      <DataGrid Grid.Row="1"
+      <DataGrid Grid.Row="0"
                 AutoGenerateColumns="False"
                 CanUserAddRows="False"
                 CanUserReorderColumns="False"
@@ -215,6 +220,13 @@
           </DataGridTemplateColumn>
         </DataGrid.Columns>
       </DataGrid>
+      <StackPanel Grid.Row="1"
+                  Orientation="Horizontal">
+        <TextBlock Text="Total: " />
+        <TextBlock Text="{Binding Path=Session.Clients.Count}" />
+        <TextBlock Text="Returned: " Margin="10,0,0,0" />
+        <TextBlock Text="{Binding Path=ReturnedClientCount}" />
+      </StackPanel>
     </Grid>
 
     <!--<DataGridTemplateColumn Header="File Size"
