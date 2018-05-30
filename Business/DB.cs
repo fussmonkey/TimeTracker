@@ -16,9 +16,8 @@ namespace TimeTracker.Business
       {
         // get collection
         var clientCollection = db.GetCollection<Client>("clients");
-        var clients = clientCollection.FindAll().OrderByDescending(c => c.Files.Select(f => f.Length).Sum()).OrderByDescending(c => c.DateReceived);
-
-        session.Clients = new Caliburn.Micro.BindableCollection<Client>(clients);
+        var clients = clientCollection.FindAll(); 
+        session.Clients = new Caliburn.Micro.BindableCollection<Client>(clients.OrderByDescending(c => c.DateReceived.Date).ThenByDescending(c => c.Files.Sum(f => f.Length)));
       }
     }
 

@@ -188,6 +188,17 @@ namespace TimeTracker.ViewModels
       ClipboardHelper.CopyToClipboard(sb.ToString(), "blah");
     }
 
+    public void GetTotals()
+    {
+      StringBuilder sb = new StringBuilder();
+      //sb.Append("<html><body>");
+      IEnumerable<Client> clients = Session.Clients.Where(c => c.IsSelected && c.DateReturned != null);
+      int count = clients.Count();
+      double totals = clients.Select(s => s.TotalTime).Sum();
+      sb.Append($"<p>Total clients: {count} - {(totals / 60):N2} hours</p>");
+      ClipboardHelper.CopyToClipboard(sb.ToString(), $"Total clients: {count} - {(totals / 60):N2} hours");
+    }
+
     public void MarkReturned()
     {
       foreach (Client client in Session.Clients.Where(c => c.IsSelected))
@@ -203,6 +214,14 @@ namespace TimeTracker.ViewModels
       {
         c.IsSelected = IsClientHeaderSelected;
       }
+    }
+
+    public void Resort()
+    {
+      IEnumerable<Client> temp = Session.Clients;
+      List<Client> copy = temp.ToList();
+      Session.Clients.Clear();
+      Session.Clients.AddRange(copy.OrderByDescending(c => c.DateReceived.Date).ThenByDescending(c => c.Files.Sum(f => f.Length)));
     }
     #endregion
 

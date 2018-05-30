@@ -60,28 +60,32 @@
     <!-- Menu -->
     <!--<Grid Grid.Row="0"
           Grid.ColumnSpan="2">-->
-      <StackPanel Grid.Row="0"
-                  Height="40"
-                  Orientation="Horizontal">
-        <StackPanel.Resources>
-          <Style BasedOn="{StaticResource {x:Type Button}}"
-                 TargetType="Button">
-            <Setter Property="Margin"
-                    Value="0,0,3,0" />
-            <Setter Property="Width"
-                    Value="75" />
-          </Style>
-        </StackPanel.Resources>
-        <Button Content="New..."
-                beh:EventFocusAttachment.ElementToFocus="{Binding ElementName=LastName}"
-                cal:Message.Attach="[Event Click]=[Action AddClient()]" />
-        <Button Content="Get Notes"
-                cal:Message.Attach="[Event Click]=[Action GetNotes()]" />
-        <Button Content="Returned"
-                cal:Message.Attach="[Event Click]=[Action MarkReturned()]" />
-        <Button Content="Save All"
-                cal:Message.Attach="[Event Click]=[Action SaveAll()]" />
-      </StackPanel>
+    <StackPanel Grid.Row="0"
+                Height="40"
+                Orientation="Horizontal">
+      <StackPanel.Resources>
+        <Style BasedOn="{StaticResource {x:Type Button}}"
+               TargetType="Button">
+          <Setter Property="Margin"
+                  Value="0,0,3,0" />
+          <Setter Property="Width"
+                  Value="75" />
+        </Style>
+      </StackPanel.Resources>
+      <Button Content="New..."
+              beh:EventFocusAttachment.ElementToFocus="{Binding ElementName=LastName}"
+              cal:Message.Attach="[Event Click]=[Action AddClient()]" />
+      <Button Content="Get Notes"
+              cal:Message.Attach="[Event Click]=[Action GetNotes()]" />
+      <Button Content="Returned"
+              cal:Message.Attach="[Event Click]=[Action MarkReturned()]" />
+      <Button Content="Save All"
+              cal:Message.Attach="[Event Click]=[Action SaveAll()]" />
+      <Button Content="Re-Sort"
+              cal:Message.Attach="[Event Click]=[Action Resort()]" />
+      <Button Content="Get Totals"
+              cal:Message.Attach="[Event Click]=[Action GetTotals()]" />
+    </StackPanel>
     <!--</Grid>-->
 
     <DockPanel Grid.Row="0"
@@ -103,7 +107,6 @@
                 cal:Message.Attach="[Event Click]=[Action AddClient()]" />
         <!-- Save -->
         <Button Content="Save"
-                
                 cal:Message.Attach="[Event Click]=[Action SaveClient]" />
       </StackPanel>
     </DockPanel>
@@ -124,7 +127,7 @@
                 CanUserAddRows="False"
                 CanUserReorderColumns="False"
                 CanUserResizeRows="False"
-                CanUserSortColumns="True"
+                CanUserSortColumns="False"
                 Margin="3"
                 ItemsSource="{Binding Path=Session.Clients}"
                 SelectedItem="{Binding Path=SelectedClient, Mode=TwoWay}"
@@ -143,7 +146,7 @@
             <DataGridTemplateColumn.CellTemplate>
               <DataTemplate>
                 <CheckBox IsChecked="{Binding Path=IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          Margin="5,0,0,0"/>
+                          Margin="5,0,0,0" />
               </DataTemplate>
             </DataGridTemplateColumn.CellTemplate>
           </DataGridTemplateColumn>
@@ -224,7 +227,8 @@
                   Orientation="Horizontal">
         <TextBlock Text="Total: " />
         <TextBlock Text="{Binding Path=Session.Clients.Count}" />
-        <TextBlock Text="Returned: " Margin="10,0,0,0" />
+        <TextBlock Text="Returned: "
+                   Margin="10,0,0,0" />
         <TextBlock Text="{Binding Path=ReturnedClientCount}" />
       </StackPanel>
     </Grid>
@@ -629,7 +633,7 @@
           </DataGrid>
         </Grid>
 
-        
+
 
 
 
